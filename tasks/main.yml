@@ -1,0 +1,46 @@
+---
+
+- set_fact:
+    testPassed: false
+
+- name: "Start check of package {{ name }}"
+  command: "dpkg -s {{ name }}"
+  ignore_errors: true
+  register: st
+
+- debug:
+    var: st
+  when: "{{debug==true}}"
+
+- include: test_present.yml
+  when:
+    - "{{ expected == 'present' }}"
+
+- include: test_absent.yml
+  when:
+    - "{{ expected == 'absent' }}"
+
+- debug:
+    var: testPassed
+  when: "{{debug==true}}"
+
+- debug:
+    msg: "TEST_PASSED: package {{ name }} expected {{ expected }} "
+  when:
+    - testPassed == true
+
+# failed tests either debug a failed message or fail immediately (as requested by the calling _test playbook
+
+- debug:
+    msg: "TEST_FAILED: package {{ name }} expected {{ expected }} "
+  when:
+    - testPassed == false
+    - immediate_exit_on_fail == false
+
+- fail:
+    msg: "TEST_FAILED: package {{ name }} expected {{ expected }} "
+  when:
+    - testPassed == false
+    - immediate_exit_on_fail == true
+
+

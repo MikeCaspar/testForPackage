@@ -1,0 +1,12 @@
+- name: set test to passed if group exists and expected = present
+  set_fact:
+      testPassed: true
+  when:
+    - st.rc == 0
+
+- name: set test to failed if group does not exist and state expected = present
+  set_fact:
+      testPassed: false
+  when:
+    - not st.rc == 0
+

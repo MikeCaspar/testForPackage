@@ -1,0 +1,23 @@
+---
+- hosts: localhost
+  remote_user: root
+
+
+  roles:
+
+## two passes
+
+    - { role: testForPackage, name: "git", expected: "present", debug: false }
+    - { role: testForPackage, name: "3dchess", expected: "absent", debug: false }
+
+## two failures
+
+    - { role: testForPackage, name: "badpackagename", expected: "present", debug: false }
+    - { role: testForPackage, name: "python-apt", expected: "absent", debug: false }
+
+## failure exit (syntax check)
+
+    - { role: testForPackage, name: "git", expected: "absent", debug: true }
+    - { role: testForPackage, name: "git", expected: "absent", debug: false, immediate_exit_on_fail: true }
+
+
