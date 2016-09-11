@@ -2,7 +2,7 @@
 
 echo "test Playbook is executing and recording results to log.txt"
 
-ansible-playbook tests/role.yml > tests/log.txt
+ansible-playbook -i tests/inventory tests/role.yml > tests/log.txt
 
 echo "Passing Tests...."
 
